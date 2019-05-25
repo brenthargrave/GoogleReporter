@@ -229,13 +229,8 @@ public class GoogleReporter {
             let currentDevice = UIDevice.current
             let osVersion = currentDevice.systemVersion.replacingOccurrences(of: ".", with: "_")
             let fallbackAgent = "Mozilla/5.0 (\(currentDevice.model); CPU iPhone OS \(osVersion) like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Mobile/13T534YI" // swiftlint:disable:this line_length
-
-            #if os(tvOS)
-                return fallbackAgent
-            #else
-                let webView = UIWebView()
-                return webView.stringByEvaluatingJavaScript(from: "navigator.userAgent") ?? fallbackAgent
-            #endif
+            // NOTE: avoid non-threadsafe UIWebView
+            return fallbackAgent
         #elseif os(OSX)
             let osVersion = ProcessInfo.processInfo.operatingSystemVersionString
             let versionString = osVersion.replacingOccurrences(of: ".", with: "_")
